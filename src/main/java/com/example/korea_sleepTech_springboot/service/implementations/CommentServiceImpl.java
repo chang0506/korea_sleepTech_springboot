@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
 
         // Post가 존재하는지 확인
         D_Post post = postRepository.findById(dto.getPostId())
-                .orElseThrow(() -> new EntityNotFoundException("Post Not Found with id: " + dto.getPostId()));
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_POST + dto.getPostId()));
 
         // 새로운 Comment 생성
         D_Comment newComment = D_Comment.builder()
@@ -61,7 +61,32 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ResponseDto<CommentResDto> updateComment(CommentUpdateReqDto dto) {
-        return null;
+    @Transactional
+    public ResponseDto<CommentResDto> updateComment(Long id, CommentUpdateReqDto dto) {
+        CommentResDto responseDto = null;
+
+        D_Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_COMMENT + id));
+
+        comment.setContent(dto.getContent());
+        D_Comment updatedComment = commentRepository.save(comment);
+
+        responseDto = CommentResDto.builder()
+                .id(updatedComment.getId())
+                .postId(updatedComment.getPost().getId())
+                .content(updatedComment.getContent())
+                .commenter(updatedComment.getCommenter())
+                .build();
+
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, responseDto);
+    }
+
+    @Override
+    @Transactional
+    public ResponseDto<Void> deleteComment(Long id) {
+        if(!commentRepository.existsById(id))
+            throw new EntityNotFoundException(ResponseMessage.NOT_EXISTS_COMMENT + id);
+        commentRepository.deleteById(id);
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, null);
     }
 }

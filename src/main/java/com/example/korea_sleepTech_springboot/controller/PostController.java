@@ -2,6 +2,7 @@ package com.example.korea_sleepTech_springboot.controller;
 
 import com.example.korea_sleepTech_springboot.common.ApiMappingPattern;
 import com.example.korea_sleepTech_springboot.dto.request.PostCreateReqDto;
+import com.example.korea_sleepTech_springboot.dto.request.PostUpdateReqDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostDetailResDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostListResDto;
 import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
@@ -36,7 +37,7 @@ public class PostController {
     // 2) 단건 조회 (댓글 포함)
     // @Param: 조회하고자 하는 댓글을 지정하는 고유 id - PathVariable(경로 변수)
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto<PostDetailResDto>> getPostById(@PathVariable Long id){
+    public ResponseEntity<ResponseDto<PostDetailResDto>> getPostById(@PathVariable Long id) {
         ResponseDto<PostDetailResDto> post = postService.getPostById(id);
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
@@ -47,4 +48,19 @@ public class PostController {
         ResponseDto<List<PostListResDto>> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
+
+    // 4) 게시물 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<PostDetailResDto>> updatePost(@PathVariable Long id, @Valid @RequestBody PostUpdateReqDto dto) {
+        ResponseDto<PostDetailResDto> post = postService.updatePost(id, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(post);
+    }
+
+    // 5) 게시물 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<Void>> deletePost(@PathVariable Long id) {
+        ResponseDto<Void> post = postService.deletePost(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

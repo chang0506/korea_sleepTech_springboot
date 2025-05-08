@@ -1,6 +1,7 @@
 package com.example.korea_sleepTech_springboot.service;
 
 import com.example.korea_sleepTech_springboot.dto.request.PostCreateReqDto;
+import com.example.korea_sleepTech_springboot.dto.request.PostUpdateReqDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostDetailResDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostListResDto;
 import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
@@ -16,4 +17,8 @@ public interface PostService {
     ResponseDto<PostDetailResDto> getPostById(Long id);
 
     ResponseDto<List<PostListResDto>> getAllPosts();
+
+    ResponseDto<PostDetailResDto> updatePost(Long id, PostUpdateReqDto dto);
+
+    ResponseDto<Void> deletePost(Long id);
 }
