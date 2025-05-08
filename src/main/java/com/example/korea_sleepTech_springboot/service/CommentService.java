@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface CommentService {
-    ResponseDto<CommentResDto> createComment(@Valid CommentCreateReqDto dto);
+    ResponseDto<CommentResDto> createComment(Long postId, @Valid CommentCreateReqDto dto);
 
-    ResponseDto<CommentResDto> updateComment(Long id, @Valid CommentUpdateReqDto dto);
+    ResponseDto<CommentResDto> updateComment(Long postId, Long commentId, @Valid CommentUpdateReqDto dto);
 
-    ResponseDto<Void> deleteComment(Long id);
+    ResponseDto<Void> deleteComment(Long postId, Long commentId);
 }

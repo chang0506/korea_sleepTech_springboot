@@ -34,12 +34,12 @@ public class CommentServiceImpl implements CommentService {
      *
      * cf) 조회
      */
-    public ResponseDto<CommentResDto> createComment(CommentCreateReqDto dto) {
+    public ResponseDto<CommentResDto> createComment(Long postId, CommentCreateReqDto dto) {
         CommentResDto responseDto = null;
 
         // Post가 존재하는지 확인
-        D_Post post = postRepository.findById(dto.getPostId())
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_POST + dto.getPostId()));
+        D_Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_POST + postId));
 
         // 새로운 Comment 생성
         D_Comment newComment = D_Comment.builder()
@@ -62,11 +62,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public ResponseDto<CommentResDto> updateComment(Long id, CommentUpdateReqDto dto) {
+    // 1번 게시물, 3번 댓글 수정
+    public ResponseDto<CommentResDto> updateComment(Long postId, Long commentId, CommentUpdateReqDto dto) {
         CommentResDto responseDto = null;
 
-        D_Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_COMMENT + id));
+        D_Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_COMMENT + commentId));
+
+        if (!comment.getPost().getId().equals(postId)) {
+            // 2번 게시물, 3번 댓글 수정하려하면 해당 구현부 코드 실행
+            throw new IllegalArgumentException("Comment does not belong to the specified Post");
+        }
 
         comment.setContent(dto.getContent());
         D_Comment updatedComment = commentRepository.save(comment);
@@ -83,10 +89,19 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public ResponseDto<Void> deleteComment(Long id) {
-        if(!commentRepository.existsById(id))
-            throw new EntityNotFoundException(ResponseMessage.NOT_EXISTS_COMMENT + id);
-        commentRepository.deleteById(id);
+    public ResponseDto<Void> deleteComment(Long postId, Long commentId) {
+        if(!commentRepository.existsById(commentId))
+            throw new EntityNotFoundException(ResponseMessage.NOT_EXISTS_COMMENT + commentId);
+
+        D_Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_COMMENT + commentId));
+
+        if (!comment.getPost().getId().equals(postId)) {
+            // 2번 게시물, 3번 댓글 수정하려하면 해당 구현부 코드 실행
+            throw new IllegalArgumentException("Comment does not belong to the specified Post");
+        }
+
+        commentRepository.delete(comment);
         return ResponseDto.setSuccess(ResponseMessage.SUCCESS, null);
     }
 }
