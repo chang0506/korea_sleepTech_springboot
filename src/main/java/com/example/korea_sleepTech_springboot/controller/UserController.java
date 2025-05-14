@@ -66,7 +66,13 @@ public class UserController {
     }
 
     // 3) 회원 탈퇴
-
+    @DeleteMapping(DELETE_USER)
+    public ResponseEntity<ResponseDto<Void>> deleteUser(
+            @AuthenticationPrincipal String userEmail
+    ){
+        ResponseDto<Void> response = userService.deleteUser(userEmail);
+        return ResponseEntity.ok(response);
+    }
 
 
 
