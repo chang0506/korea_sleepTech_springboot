@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentResDto {
+@Builder
+public class PostWithCommentCountResponseDto {
     private Long id;
-    private Long postId;
+    private String title;
     private String content;
-    private String commenter;
+    private String author;
+    private int commentCount;
 }

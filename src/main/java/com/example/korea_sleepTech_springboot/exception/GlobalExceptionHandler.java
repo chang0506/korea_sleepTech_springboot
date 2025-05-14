@@ -13,19 +13,19 @@ import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice // 모든 @RestController에서 발생하는 예외를 처리
 /*
- * 1. 단일 책임 원칙 (SRP)
- *  : 예외처리를 Controller가 아닌 Global Exception Handler에서  담당
- *
- * 2. 재삳용성 증가
- *  : 모든 Controller에 대한 예외 처리가 한 곳에서 관리
- *
- * 3. 가독성 향상
- */
+* 1. 단일 책임 원칙(SRP)
+*   : 예외처리를 Controller가 아닌 Global Exception Handler에서 담당
+*
+* 2. 재사용성 증가
+*   : 모든 Controller에 대한 예외 처리가 한 곳에서 관리
+*
+* 3. 가독성 향상
+* */
 public class GlobalExceptionHandler {
-    // 400 - 잘못된 요청(Bad Request)
+    // 400 - 잘못된 요청 (Bad Request)
     // : 잘못된 인자가 전달(IllegalArgumentException)되거나 DTO 검증 실패 시(MethodArgumentNotValidException)
     // cf) @Valid 애너테이션으로 오류 발생 시 MethodArgumentNotValidException
-    @ExceptionHandler({IllegalAccessException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler({IllegalArgumentException.class, MethodArgumentNotValidException.class})
     public ResponseEntity<ResponseDto<?>> handleBadRequest(Exception e) {
         e.printStackTrace();
         ResponseDto<?> response = ResponseDto.setFailed("Bad Request: " + e.getMessage());
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ResponseDto<?>> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         e.printStackTrace();
-        ResponseDto<?> response = ResponseDto.setFailed("Conflict: " + e.getMessage());
+        ResponseDto<?> response = ResponseDto.setFailed("Conflict : " + e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDto<?>> handleException(Exception e) {
         e.printStackTrace();
-        ResponseDto<?> response = ResponseDto.setFailed("Internal Server Error: " + e.getMessage());
+        ResponseDto<?> response = ResponseDto.setFailed("Internal Server Error : " + e.getMessage());
         return ResponseEntity.internalServerError().body(response);
     }
 }

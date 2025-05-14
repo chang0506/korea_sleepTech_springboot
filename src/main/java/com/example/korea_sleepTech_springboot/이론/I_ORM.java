@@ -64,7 +64,7 @@ public class I_ORM {
     //    >> 주로 GeneratedValue와 함께 사용
     //          (기본키 자동 생성 전략 설정 - strategy 옵션 / GenerationType.IDENTITY(AUTO_INCREMENT 설정))
 
-    // 3. @Column
+    // @Column
     // : 필드를 특정 테이블의 열과 매핑
     // - 생략 시 기본으로 필드 이름이 열 이름으로 사용
     // +) 옵션
@@ -74,7 +74,7 @@ public class I_ORM {
     //      - unique 옵션: 해당 필드의 값이 유일해야 하는지 여부를 지정 (기본값: false)
     //      >> 각 옵션은 콤마(,)로 구분하여 나열
 
-    // 4. @Table
+    // @Table
     // : 클래스가 어떤 테이블과 매핑되는지 명시
     // : 생략 시 기본으로 클래스 이름이 테이블 명으로 사용
     // +) name 옵션

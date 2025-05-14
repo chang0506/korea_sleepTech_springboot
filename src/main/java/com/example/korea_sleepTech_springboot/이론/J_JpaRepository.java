@@ -1,13 +1,14 @@
 package com.example.korea_sleepTech_springboot.이론;
 
 public class J_JpaRepository {
-    // JpaRepository
+    // JpaRepository<E, ID>
     // : Spring Data JPA에서 제공하는 기본 인터페이스
     // - CRUD와 페이징, 정렬을 포함한 다양한 데이터 엑세스 메서드를 제공
 
     // 1. CRUD 메서드
-    // ==== 메서드명(매개변수): 반환타입 ====
-    // 1) save(S entity): E
+    // ===== 메서드명(매개변수): 반환타입 =====
+
+    // 1) save(E entity): E
     // - 새로운 엔티티를 저장하거나, 기존 엔티티를 업데이트
 
     // 2) findById(ID id): E
@@ -17,7 +18,7 @@ public class J_JpaRepository {
     // - 주어진 ID가 존재하는지 확인
 
     // 4) findAll(): List<E>
-    // - DB에 잇는 모든 엔티티를 조회
+    // - DB에 있는 모든 엔티티를 조회
 
     // 5) deleteById(ID id): void
     // - 주어진 ID의 엔티티를 삭제
@@ -39,31 +40,32 @@ public class J_JpaRepository {
 
     // 2) 쿼리 메서드 키워드 정리
     /*
-     * findBy: 조회(SELECT) 시작
-     * AND: AND 조건
-     * Or: OR 조건
-     * Between: 값 사이 검색 (BETWEEN A AND B)
-     * LessThan: 미만
-     * LessThanEqual: 이하
-     * GreaterThan: 초과
-     * GreaterThanEqual: 이상
-     *
-     * IsNull, IsNotNull: Null 여부 확인, NOT NULL 여부 확인
-     *
-     * Like, NotLike: SQL LIKE 패턴 매칭, 그 외의 패턴 매칭
-     *
-     * StartingWith, EndingWithm Containing: ~로 시작하는, ~로 끝나는, ~를 포함하는
-     *
-     * In, NotIn
-     * True, False
-     * OrderBy
-     */
+    * findBy: 조회(SELECT) 시작
+    * And: AND 조건
+    * Or: OR 조건
+    * Between: 값 사이 검색 (BETWEEN A AND B)
+    *
+    * LessThan: 미만
+    * LessThanEqual: 이하
+    * GreaterThan: 초과
+    * GreaterThanEqual: 이상
+    *
+    * IsNull, IsNotNull: NULL 여부 확인, NOT NULL 여부 확인
+    *
+    * Like, NotLike: SQL LIKE 패턴 매칭, 그 외의 패턴 매칭
+    *
+    * StartingWith, EndingWith, Containing: ~로 시작하는, ~로 끝나는, ~를 포함하는
+    *
+    * In, NotIn
+    * True, False
+    * OrderBy
+    * */
 
     // 기본 조회
     // : Optional<T> findById(Long id);
 
     // 조건 검색
-    // EX1) '가격'이 특정 금액 '이상'인 '상품'을 '조회
+    // EX1) '가격'이 특정 금액 '이상'인 '상품'을 '조회'
     // : findByPriceGreaterThan(int price)
 
     // EX2) '이름'에 특정 문자열이 '포함'된 '상품'을 '조회'
@@ -72,5 +74,5 @@ public class J_JpaRepository {
     // EX3) 카테고리가 일치하고 가격이 특정 범위 안에 있는 상품 조회
     // : findByCategoryAndPriceBetween(String category, int minPrice, int maxPrice)
 
-    // cf) @Query: 조건이 복잡하거나 JOIN이 필요한 경우 메서드 이름만으로 한계가 잇음, 직접 쿼리 작성 가능
+    // cf) @Query: 조건이 복잡하거나 JOIN이 필요한 경우 메서드 이름만으로 한계가 있음, 직접 쿼리 작성 가능
 }

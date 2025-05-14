@@ -29,7 +29,8 @@ public class TestService {
     public A_TestEntity getTestById(Long id) {
         Optional<A_TestEntity> optionalTestEntity = testRepository.findById(id);
 
-        A_TestEntity test = optionalTestEntity.orElseThrow(() -> new RuntimeException("해당 ID를 가진 데이터가 없습니다: " + id ));
+        A_TestEntity test = optionalTestEntity.orElseThrow(() ->
+                new RuntimeException("해당 ID를 가진 데이터가 없습니다: " + id));
 
         return test;
     }

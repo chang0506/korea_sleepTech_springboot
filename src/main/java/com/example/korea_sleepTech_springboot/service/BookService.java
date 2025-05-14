@@ -19,7 +19,6 @@ public class BookService {
     private final BookRepository bookRepository;
 
     public ResponseDto<BookResponseDto> createBook(BookCreateRequestDto requestDto) {
-        ResponseDto<BookResponseDto> responseDto = null;
         try {
             C_Book newBook = new C_Book(
                     null, requestDto.getWriter(), requestDto.getTitle(), requestDto.getContent(), requestDto.getCategory()
@@ -120,15 +119,19 @@ public class BookService {
         List<BookResponseDto> books = null;
 
         try {
-            List<C_Book> booksByTitleContaining = bookRepository.findByTitleContains((keyword));
+            List<C_Book> booksByTitleContaining = bookRepository.findByTitleContaining(keyword);
 
             books = booksByTitleContaining.stream()
                     .map(book -> new BookResponseDto(
+                            // 작성자, 제목, 카테고리
                             book.getWriter(),
                             book.getTitle(),
                             book.getCategory()
-                    )).collect(Collectors.toList());
+                    ))
+                    .collect(Collectors.toList());
+
             return ResponseDto.setSuccess("책 검색을 정상적으로 완료하였습니다.", books);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseDto.setFailed("책을 검색하는 동안 문제가 발생하였습니다.");
@@ -146,8 +149,11 @@ public class BookService {
                             book.getWriter(),
                             book.getTitle(),
                             book.getCategory()
-                    )).collect(Collectors.toList());
+                    ))
+                    .collect(Collectors.toList());
+
             return ResponseDto.setSuccess("카테고리별 책 조회가 성공하였습니다.", books);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseDto.setFailed("카테고리별 책을 검색하는 동안 문제가 발생하였습니다.");
@@ -156,8 +162,8 @@ public class BookService {
 
     public ResponseDto<List<BookResponseDto>> getBooksByCategoryAndWriter(C_Category category, String writer) {
         List<BookResponseDto> books = null;
-
         List<C_Book> searchingBook = null;
+
         try {
             if (category == null) {
                 searchingBook = bookRepository.findByWriter(writer);
@@ -170,8 +176,11 @@ public class BookService {
                             book.getWriter(),
                             book.getTitle(),
                             book.getCategory()
-                    )).collect(Collectors.toList());
+                    ))
+                    .collect(Collectors.toList());
+
             return ResponseDto.setSuccess("조회가 완료되었습니다.", books);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseDto.setFailed("카테고리와 작성자로 조회하는 동안 문제가 발생하였습니다.");

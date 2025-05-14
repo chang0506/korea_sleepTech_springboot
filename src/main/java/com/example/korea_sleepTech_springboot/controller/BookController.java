@@ -21,7 +21,7 @@ public class BookController {
     // Service 객체를 주입받아 저장하는 변수
     private final BookService bookService;
 
-//    public BokkController(BookService bookService) {
+//    public BookController(BookService bookService) {
 //        this.bookService = bookService;
 //    }
 
@@ -86,16 +86,15 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.OK).body(books);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-
     }
 
     // 2) 카테고리별 책 조회
     @GetMapping("/category/{category}")
     public ResponseEntity<ResponseDto<List<BookResponseDto>>> getBooksByCategory(
             @PathVariable C_Category category
-    ) {
+            ) {
         try {
             ResponseDto<List<BookResponseDto>> books = bookService.getBooksByCategory(category);
             return ResponseEntity.status(HttpStatus.OK).body(books);
@@ -104,14 +103,15 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
     // cf) 제목 검색 VS 카테고리별 조회
     // 제목검색) Query Parameter 사용
-    //      >>> GET /books/search/title?keyword=xx
+    //          >>> GET /books/search/title?keyword=콩
     // : "제목에 특정 단어가 포함되어 있는 책들"을 검색
-    // >> 정확한 자원을 가리키는 것이 아니라 필터 조건을 제시하는 형태
+    // - 정확한 자원을 가리키는 것이 아니라 필터 조건을 제시하는 형태
 
     // 카테고리별조회) Path Variable 사용
-    //      >>> GET /books/category/NOVEL
+    //              >> GET /books/category/NOVEL
     // : Category 값이 어떤 고정된 그룹(NOVEL, ESSAY, POEM 등) 중 하나
     // - "A라는 카테고리에 속한 책 리스트"라는 명확한 리소스를 가리키는 URI로 간주
 
@@ -119,13 +119,13 @@ public class BookController {
     // : 복합 조건 검색은 보통 Query Parameter를 조합해서 처리
     @GetMapping("/search/category-writer")
     public ResponseEntity<ResponseDto<List<BookResponseDto>>> getBooksByCategoryAndWriter(
-        @RequestParam(required = false) C_Category category,
-        @RequestParam String writer
+            @RequestParam(required = false) C_Category category,
+            @RequestParam String writer
 
-        // cf) (required = false) 옵션: 해당 매개변수는 필수값 X
-        // - GET /books/search/category-writer?category=xxx&writer=yyy
-        // - GET /books/search/category-writer?writer=yyy
-    ){
+            // cf) (required = false) 옵션: 해당 매개변수는 필수값 X
+            // - GET /books/search/category-writer?category=xxx&writer=yyy
+            // - GET /books/search/category-writer?writer=yyy
+    ) {
         try {
             ResponseDto<List<BookResponseDto>> books = bookService.getBooksByCategoryAndWriter(category, writer);
             return ResponseEntity.status(HttpStatus.OK).body(books);

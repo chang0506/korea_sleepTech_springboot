@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service // 비즈니스 로직을 처리하는 역할
 public class StudentService {
-    StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -33,9 +33,10 @@ public class StudentService {
                             student.getName()
                     ))
                     .collect(Collectors.toList());
+
             // 컬렉션 프레임 워크 + stream API
             // 1) 컬렉션데이터.stream(): 스트림으로 변환
-            // 2) .map, .filter 등 중간 연산
+            // 2) .map(), .filter() 등 중간 연산
             // 3) 리스트 형태로 다시 변환 - .collect(Collectors.toList());
 
             return studentResponseDtos;
@@ -52,12 +53,16 @@ public class StudentService {
     public StudentResponseDto getStudentById(Long id) {
         StudentResponseDto studentResponseDto = null;
         try {
-            B_Student student = studentRepository.findById(id).orElseThrow(() -> new Error("Student not found with id: " + id));
+            B_Student student = studentRepository.findById(id)
+                    .orElseThrow(() -> new Error("Student not found with id: " + id));
 
             studentResponseDto = new StudentResponseDto(
-                    student.getId(), student.getName()
+                    student.getId(),
+                    student.getName()
             );
+
             return studentResponseDto;
+
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, // HTTP 상태 코드
@@ -69,15 +74,19 @@ public class StudentService {
 
     public StudentResponseDto createStudent(StudentCreateRequestDto studentDto) {
         StudentResponseDto studentResponseDto = null;
+
         try {
             B_Student student = new B_Student(
-                    studentDto.getName(), studentDto.getEmail()
+                    studentDto.getName(),
+                    studentDto.getEmail()
             );
+
             B_Student savedStudent = studentRepository.save(student);
 
             // 저장되고 난 후 B_Student 객체를 DTO로 변환하여 반환
             studentResponseDto = new StudentResponseDto(
-                    savedStudent.getId(), savedStudent.getName()
+                    savedStudent.getId(),
+                    savedStudent.getName()
             );
 
             return studentResponseDto;
@@ -92,25 +101,29 @@ public class StudentService {
     }
 
     public StudentResponseDto updateStudent(Long id, StudentUpdateRequestDto studentDto) {
-        StudentResponseDto responsedto = null;
+        StudentResponseDto responseDto = null;
 
         try {
             B_Student student = studentRepository.findById(id)
                     .orElseThrow(() -> new Error("Student not found with id: " + id));
+
             student.setName(studentDto.getName());
 
-            // JPA의 save() 메서드의 동작 방식 (2가지)
+            // ===== JPA save() 메서드의 동작 방식 (2가지) =====
+
             // 1) 새로운 객체(PK 없음) 저장: INSERT SQL 실행 (새로 저장)
             // 2) 기존 객체(PK 있음) 저장: UPDATE SQL 실행 (기존 데이터 수정)
 
             // cf) PK 값이 null 인지 유무를 자동 확인
-            // >> save() 하나로 JPA가 자동 저장을 처리
+            // >>> save() 하나로 JPA가 자동 저장을 처리
             B_Student updatedStudent = studentRepository.save(student);
-            responsedto = new StudentResponseDto(
-                    updatedStudent.getId(), updatedStudent.getName()
+
+            responseDto = new StudentResponseDto(
+                    updatedStudent.getId(),
+                    updatedStudent.getName()
             );
 
-            return responsedto;
+            return responseDto;
 
         } catch (Exception e) {
             throw new ResponseStatusException(
@@ -125,8 +138,8 @@ public class StudentService {
         try {
             B_Student student = studentRepository.findById(id)
                     .orElseThrow(() -> new Error("Student not found with id: " + id));
-            studentRepository.delete(student); // 조회한 학생 객체를 DB에서 삭제
 
+            studentRepository.delete(student); // 조회한 학생 객체를 DB에서 삭제
 
         } catch (Exception e) {
             throw new ResponseStatusException(
