@@ -1,6 +1,7 @@
 package com.example.korea_sleepTech_springboot.service.implementations;
 
 import com.example.korea_sleepTech_springboot.common.ResponseMessage;
+import com.example.korea_sleepTech_springboot.dto.auth.PasswordResetRequestDto;
 import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
 import com.example.korea_sleepTech_springboot.dto.user.request.UserSignInRequestDto;
 import com.example.korea_sleepTech_springboot.dto.user.request.UserSignUpRequestDto;
@@ -13,8 +14,12 @@ import com.example.korea_sleepTech_springboot.repository.RoleRepository;
 import com.example.korea_sleepTech_springboot.repository.UserRepository;
 import com.example.korea_sleepTech_springboot.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -25,9 +30,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtProvider jwtProvider;
-    private final RoleRepository roleRepository;
 
     // 1) 회원 가입
     @Override
@@ -101,12 +106,33 @@ public class AuthServiceImpl implements AuthService {
         // 사용자 정보의 권한 정보를 호출
         Set<String> roles = user.getRoles().stream()
                 .map(Role::getRoleName)
-                //.map(role -> role.getRoleName())
+//              .map(role -> role.getRoleName())
                 .collect(Collectors.toSet());
 
         String token = jwtProvider.generateJwtToken(email, roles); // username에 email 저장
 
         data = new UserSignInResponseDto(token, user, exprTime);
         return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+    }
+
+    @Override
+    public Mono<ResponseEntity<String>> resetPassword(PasswordResetRequestDto dto) {
+            return Mono.fromCallable(() -> {
+                User user = userRepository.findByEmail(dto.getEmail())
+                        .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
+
+//                if (!user.isEmailVerified()) {
+//                    return ResponseEntity.badRequest().body("이메일 인증이 필요합니다.");
+//                }
+
+                // 비밀번호, 비밀번호 확인 유효성 검사 필수! (일치 여부, 형식 여부)
+
+                user.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
+                userRepository.save(user);
+
+                return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+            }).onErrorResume(e -> Mono.just(
+                    ResponseEntity.badRequest().body("비밀번호 재설정 실패: " + e.getMessage())
+            )).subscribeOn(Schedulers.boundedElastic());
     }
 }

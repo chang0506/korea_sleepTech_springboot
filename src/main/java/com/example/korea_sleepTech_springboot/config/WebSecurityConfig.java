@@ -1,6 +1,7 @@
 package com.example.korea_sleepTech_springboot.config;
 
 import com.example.korea_sleepTech_springboot.filter.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,7 +2,7 @@ package com.example.korea_sleepTech_springboot.controller;
 
 import com.example.korea_sleepTech_springboot.common.ApiMappingPattern;
 import com.example.korea_sleepTech_springboot.dto.admin.request.PutAuthorityRequestDto;
-import com.example.korea_sleepTech_springboot.dto.admin.response.DemoteToAdminResponseDto;
+import com.example.korea_sleepTech_springboot.dto.admin.response.DemoteFromAdminResponseDto;
 import com.example.korea_sleepTech_springboot.dto.admin.response.PromoteToAdminResponseDto;
 import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
 import com.example.korea_sleepTech_springboot.service.AdminService;
@@ -29,16 +29,16 @@ public class AdminController {
     public ResponseEntity<ResponseDto<PromoteToAdminResponseDto>> promoteUserToAdmin(
             @RequestBody PutAuthorityRequestDto dto
     ) {
-        ResponseDto<PromoteToAdminResponseDto> responseDto = adminService.promoteUserToAdmin(dto);
-        return ResponseEntity.ok(responseDto);
+        ResponseDto<PromoteToAdminResponseDto> response = adminService.promoteUserToAdmin(dto);
+        return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(PUT_AUTHORITY_DEMOTE)
-    public ResponseEntity<ResponseDto<DemoteToAdminResponseDto>> demoteUserFromAdmin(
+    public ResponseEntity<ResponseDto<DemoteFromAdminResponseDto>> demoteUserFromAdmin(
             @RequestBody PutAuthorityRequestDto dto
     ) {
-        ResponseDto<DemoteToAdminResponseDto> responseDto = adminService.demoteUserFromAdmin(dto);
-        return ResponseEntity.ok(responseDto);
+        ResponseDto<DemoteFromAdminResponseDto> response = adminService.demoteUserFromAdmin(dto);
+        return ResponseEntity.ok(response);
     }
 }

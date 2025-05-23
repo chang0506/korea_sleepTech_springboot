@@ -7,8 +7,6 @@ import jakarta.validation.Valid;
 
 public interface UserService {
     ResponseDto<GetUserResponseDto> getUserInfo(String userEmail);
-
     ResponseDto<GetUserResponseDto> updateUserInfo(String userEmail, @Valid UserUpdateRequestDto dto);
-
     ResponseDto<Void> deleteUser(String userEmail);
 }

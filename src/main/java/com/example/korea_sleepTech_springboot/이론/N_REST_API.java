@@ -1,4 +1,4 @@
-//package com.example.korea_sleepTech_springboot.이론;
+package com.example.korea_sleepTech_springboot.이론;
 public class N_REST_API {
 }
 /*
@@ -61,8 +61,8 @@ public class N_REST_API {
 *
 * cf) 실무에서 많이 사용되는 RESTful API 경로 형식
 * - /me
-*       : 현재 로그인 한 사용자의 리소스에 접근할 때 사용
-*       EX) 로그인한 사용자 정보 조회: api/v1/users/me (GET)
+*       : 현재 로그인한 사용자의 리소스에 접근할 때 사용
+*       EX) 로그인한 사용자 정보 조회(내 정보 조회): api/v1/users/me (GET)
 *           로그인한 사용자의 비밀번호 변경: api/v1/users/me/password (PUT)
 *           로그인한 사용자의 설정 정보에 접근: api/v1/users/me/settings
 *
@@ -84,7 +84,6 @@ public class N_REST_API {
 *       : 계정 정보 관련 작업
 *       EX) /account/deactivate
 *           /account/settings
-*
 *
 * 1) 사용자(User) 관련 REST API
 * - 사용자 목록 조회: GET /api/v1/users

@@ -7,6 +7,7 @@ import com.example.korea_sleepTech_springboot.dto.user.response.GetUserResponseD
 import com.example.korea_sleepTech_springboot.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -71,15 +72,6 @@ public class UserController {
             @AuthenticationPrincipal String userEmail
     ){
         ResponseDto<Void> response = userService.deleteUser(userEmail);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.noContent().build();
     }
-
-
-
-
-
-
-
-
-
 }

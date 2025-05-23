@@ -37,20 +37,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDto<GetUserResponseDto> updateUserInfo(String userEmail, UserUpdateRequestDto dto) {
-        User user = userRepository.findByEmail(userEmail).orElse(null);
 
-        if (user == null) {
-            return ResponseDto.setFailed(ResponseMessage.NOT_EXISTS_USER);
-        }
+//        User user = userRepository.findByEmail(userEmail).orElse(null);
+//
+//        if (user == null) {
+//            return ResponseDto.setFailed(ResponseMessage.NOT_EXISTS_USER);
+//        }
+
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_USER));
+
 
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-            //비밀번호 정상
+            // 비밀번호 정상
             if (!dto.getPassword().equals(dto.getConfirmPassword())) {
-                //비밀번호 확인결과와 일치하지않음
+                // 비밀번호 확인과 일치하지 않음
 //                return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_PASSWORD);
                 throw new IllegalArgumentException(ResponseMessage.NOT_MATCH_PASSWORD);
             }
-
 
             // 비밀번호 정상 + 일치
             String encodedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
