@@ -11,5 +11,5 @@ public class PostRequestDto {
     private String title;
 
     @NotBlank
-    private String cocntent;
+    private String content;
 }

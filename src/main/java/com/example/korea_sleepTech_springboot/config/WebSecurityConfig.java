@@ -1,7 +1,6 @@
 package com.example.korea_sleepTech_springboot.config;
 
 import com.example.korea_sleepTech_springboot.filter.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -108,7 +107,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers( // : 특정 요청과 일치하는 url에 대한 엑세스
                                         // 특정 경로에 대한 엑세스 설정
-                                        new AntPathRequestMatcher("/api/v1/auth/**")
+                                        new AntPathRequestMatcher("/api/v1/auth/**"),
+                                        new AntPathRequestMatcher("/api/v1/post-datas/**")
                                 ).permitAll() // : 인증 처리 없이 접근 가능 (누구나 접근 가능 - 인증, 인가 없이 접근 가능)
                                 .requestMatchers("/api/v1/user/**").hasRole("USER")
                                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")

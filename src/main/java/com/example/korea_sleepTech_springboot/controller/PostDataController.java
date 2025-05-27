@@ -7,7 +7,6 @@ import com.example.korea_sleepTech_springboot.service.PostDataService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class PostDataController {
             // - MultipartResolver가 동작하여 분리된 데이터들을 역직렬화
             @RequestPart("data") @Valid PostRequestDto dto, // JSON 형식 데이터
             @RequestPart(value = "file", required = false) MultipartFile file // 업로드 파일 (선택)
-            ) {
+            ) throws IOException {
         ResponseDto<PostResponseDto> responseDto = postDataService.createPost(dto, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }

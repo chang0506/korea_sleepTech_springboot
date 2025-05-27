@@ -6,6 +6,8 @@ import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 public interface PostDataService {
-    ResponseDto<PostResponseDto> createPost(@Valid PostRequestDto dto, MultipartFile file);
+    ResponseDto<PostResponseDto> createPost(@Valid PostRequestDto dto, MultipartFile file) throws IOException;
 }
