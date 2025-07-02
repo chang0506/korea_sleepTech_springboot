@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.korea_sleepTech_springboot.mapper.MybatisUserMapper">
+    <!--
+        resultType: 반드시 엔티티 클래스명으로 오타 없이 지정
+    -->
+    <select id="findAllWithGmailDomain" resultType="MyBatisUser">
+        -- MySQL 문법 그 자체를 사용
+        SELECT * FROM users WHERE email LIKE '%@gmail.com'
+    </select>
+    <select id="findByEmail" resultType="MyBatisUser" parameterType="String">
+        -- MySQL 문법 그 자체를 사용
+        SELECT * FROM users WHERE email = #{email}
+    </select>
+
+    <!--
+        + 사용자 정의 resultMap: DB의 컬럼과 JAVA의 DTO 필드를 매핑
+            id: resultMap의 식별자 (아래의 select 문에서 사용)
+            type: 매핑할 DTO 클래스
+    -->
+
+    <resultMap id="UserResultMap" type="com.example.korea_sleepTech_springboot.dto.MyBatisResponseDto">
+<!--        기본 키 매핑 (id 컬럼 >> MyBatisResponseDto의 id 필드 (기본키에 사용, 성능 최적화)-->
+        <id property="id" column="id" />
+<!--        일반 컬럼 매핑 -->
+        <result property="username" column="username" />
+        <result property="email" column="email" />
+    </resultMap>
+
+<!--    결과 매핑 방식은 위에서 정의한 UserResultMap을 사용
+        : 반환 타입이 곧바로 DTO
+-->
+    <select id="findByEmail" resultMap="UserResultMap">
+        SELET * FROM users
+    </select>
+</mapper>
